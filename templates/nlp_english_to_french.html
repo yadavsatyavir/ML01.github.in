@@ -1,0 +1,95 @@
+<html lang="en">
+
+<head>
+    <title>Sample Application</title>
+    <link rel="shortcut icon" type="image/png" href="../static/favicon.ico" />
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="../static/custom.js"></script>
+</head>
+
+<body>
+    <form>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <a href="#train" data-toggle="collapse">
+                                <h4 class="panel-title">
+                                    Translate english to french - Enter some text to see it action
+                                </h4>
+                            </a>
+                        </div>
+                        <div class="panel-body" id="train">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <td>
+                                        <select style="max-width: 300px;" class="form-control" id="ddlLanguage">
+                                                <option value="eng-fra">English to French</option>
+                                                <option value="eng-hin">English to Hindi</option>
+                                        </select>
+                                    </td>
+                                    <td>I got training on 10000 lines.</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-6">
+                                        <textarea type="text" rows="5" value="" id="txtInputText" placeholder="Enter some text" class="form-control"></textarea>
+                                    </td>
+                                    <td class="col-md-6">
+                                        <textarea type="text" rows="5" value="" id="txtResult" class="form-control"></textarea>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <button type="button" class="btn btn-sm btn-primary" id="btnCheckText">Translate Text</button>
+                                        <button type="button" class="btn btn-sm btn-primary" id="btnClear">Clear</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+
+</html>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#btnClear").click(function() {
+            $('#txtResult').val('');
+            $('#txtInputText').val('');
+        });
+        $("#btnCheckText").click(function() {
+            var inputText = $('#txtInputText').val();
+            if (inputText.length < 5) {
+                alert("Minimum 5 character input text is required.");
+                return;
+            }
+            var formData = new FormData();
+            formData.append('inputText', inputText);
+            formData.append('modelName', $('#ddlLanguage').val());
+
+            var appURL = window.location.origin + '/nlp_convert_english_to_french';
+            $.ajax({
+                url: appURL,
+                type: 'POST',
+                data: formData,
+                processData: false, // tell jQuery not to process the data
+                contentType: false, // tell jQuery not to set contentType
+                cache: false,
+                success: function(resultData, s) {
+                    $('#txtResult').val(resultData);
+                },
+                error: function() {
+                    $("#txtResult").html("Failed please try upload again");
+                }
+            });
+        });
+
+    });
+</script>

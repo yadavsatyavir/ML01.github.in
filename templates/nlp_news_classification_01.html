@@ -1,0 +1,101 @@
+<html lang="en">
+
+<head>
+    <title>Sample Application</title>
+    <link rel="shortcut icon" type="image/png" href="../static/favicon.ico" />
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="../static/custom.js"></script>
+</head>
+
+<body>
+    <form>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <a href="#train" data-toggle="collapse">
+                                <h4 class="panel-title">
+                                    News Classification Tool - Enter some text to see the classification in action
+                                </h4>
+                            </a>
+                        </div>
+                        <div class="panel-body" id="train">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <td colspan="3">I got training on below categories and I can predict them with 90% accuracy.</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">
+                                        <div id="divCategory" style="margin: 2px;" class="row"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">
+                                        <textarea type="text" rows="10" value="" id="txtInputText" placeholder="Enter some text" class="form-control"></textarea>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-2">
+                                        <button type="button" class="btn btn-sm btn-primary" id="btnCheckText">Check
+											Review Sentiment</button>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-primary" id="btnClear">Clear</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+
+</html>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var itemList = ["alt.atheism", "comp.graphics", "comp.os.ms-windows.misc", "comp.sys.ibm.pc.hardware", "comp.sys.mac.hardware", "comp.windows.x", "misc.forsale", "rec.autos", "rec.motorcycles", "rec.sport.baseball", "rec.sport.hockey", "sci.crypt", "sci.electronics", "sci.med", "sci.space", "soc.religion.christian", "talk.politics.guns", "talk.politics.mideast", "talk.politics.misc", "talk.religion.misc"];
+        var categoryHtml = '';
+        $.each(itemList, function(index, value) {
+            console.log(index + ": " + value);
+            categoryHtml += '<div id="div' + index + '" class="divResult col-md-3" style="border: 1px solid lightgray;margin-left: 1px;margin-top: 1px;width: 24% !important;">' + value + '</div>';
+        });
+        $("#divCategory").html(categoryHtml);
+
+        $("#btnClear").click(function() {
+            $('.divResult').removeClass('alert-success');
+            $('#txtInputText').val('');
+        });
+        $("#btnCheckText").click(function() {
+            var inputText = $('#txtInputText').val();
+            if (inputText.length == 0) {
+                alert("Enter the name of person in image.");
+                return;
+            }
+            var formData = new FormData();
+            formData.append('inputText', inputText);
+            var appURL = window.location.origin + '/nlp_predict_news_classification_01';
+            $.ajax({
+                url: appURL,
+                type: 'POST',
+                data: formData,
+                processData: false, // tell jQuery not to process the data
+                contentType: false, // tell jQuery not to set contentType
+                cache: false,
+                success: function(d, s) {
+                    $('.divResult').removeClass('alert-success');
+                    $('#div' + d).addClass("alert-success");
+                },
+                error: function() {
+                    $("#divResult").html("Failed please try upload again");
+                }
+            });
+        });
+
+    });
+</script>

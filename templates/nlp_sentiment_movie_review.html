@@ -1,0 +1,103 @@
+<html lang="en">
+
+<head>
+	<title>Sample Application</title>
+	<link rel="shortcut icon" type="image/png" href="../static/favicon.ico" />
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+		integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+	<script src="../static/custom.js"></script>
+</head>
+
+<body>
+	<form>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<a href="#train" data-toggle="collapse">
+								<h4 class="panel-title">
+									Movie review - Enter some text to test this Model
+								</h4>
+							</a>
+						</div>
+						<div class="panel-body" id="train">
+							<table class="table table-bordered">
+								<tr>
+									<td colspan="3">
+										<textarea type="text" rows="10" value="" id="txtInputText"
+											placeholder="Enter some text to check the sentiments"
+											class="form-control"></textarea>
+									</td>
+								</tr>
+								<tr>
+									<td class="col-md-2">
+										<button type="button" class="btn btn-sm btn-primary" id="btnCheckText">Check
+											Review Sentiment</button>
+									</td>
+									<td>
+										<div id="divResult"></div>
+									</td>
+									<td class="col-md-2">
+										<button type="button" class="btn btn-sm btn-primary" id="btnClear">Clear</button>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</body>
+
+</html>
+<script type="text/javascript">
+	$(document).ready(function () {
+		$("#btnClear").click(function () {
+			$('#divResult').parent().removeClass()
+			$('#txtInputText').val('');
+			$("#divResult").html("");
+		});
+		$("#btnCheckText").click(function () {
+			var inputText = $('#txtInputText').val();
+			if (inputText.length == 0) {
+				alert("Enter the name of person in image.");
+				return;
+			}
+			var formData = new FormData();
+			formData.append('inputText', inputText);
+			//var appURL = window.location.origin + '/nlp_check_sentiment_movie_review/' + inputText;
+			var appURL = window.location.origin + '/nlp_check_sentiment_movie_review/ss';
+			$.ajax({
+				url: appURL,
+				type: 'POST',
+				data: formData,
+				processData: false,  // tell jQuery not to process the data
+				contentType: false,  // tell jQuery not to set contentType
+				cache: false,
+				success: function (d, s) {
+
+					if (d === "1") {
+						$('#divResult').parent().addClass("success");
+						$("#divResult").html("POSITIVE");
+					}
+					else {
+						$('#divResult').parent().addClass("danger");
+						$("#divResult").html("NEGATIVE");
+					}
+				},
+				error: function () {
+					$("#divResult").html("Failed please try upload again");
+				}
+			});
+		});
+
+	});
+
+
+
+</script>

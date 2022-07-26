@@ -1,0 +1,212 @@
+<html lang="en">
+
+<head>
+    <title>Deep learning</title>
+    <link rel="shortcut icon" type="image/png" href="../static/favicon.ico" />
+    <script src="../static/FileSaver.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="../static/custom.js"></script>
+</head>
+<script type="text/javascript">
+    var canvas, ctx, flag = false,
+        prevX = 0,
+        currX = 0,
+        prevY = 0,
+        currY = 0,
+        dot_flag = false;
+
+    var x = "white",
+        y = 4;
+
+    function init() {
+        canvas = document.getElementById('can');
+        ctx = canvas.getContext("2d");
+        w = canvas.width;
+        h = canvas.height;
+
+        canvas.addEventListener("mousemove", function (e) {
+            findxy('move', e)
+        }, false);
+        canvas.addEventListener("mousedown", function (e) {
+            findxy('down', e)
+        }, false);
+        canvas.addEventListener("mouseup", function (e) {
+            findxy('up', e)
+        }, false);
+        canvas.addEventListener("mouseout", function (e) {
+            findxy('out', e)
+        }, false);
+    }
+    function color(obj) {
+        switch (obj.id) {
+            case "green":
+                x = "green";
+                break;
+            case "blue":
+                x = "blue";
+                break;
+            case "red":
+                x = "red";
+                break;
+            case "yellow":
+                x = "yellow";
+                break;
+            case "orange":
+                x = "orange";
+                break;
+            case "black":
+                x = "black";
+                break;
+            case "white":
+                x = "white";
+                break;
+        }
+        if (x == "white") y = 14;
+        else y = 2;
+
+    }
+    function draw() {
+        ctx.beginPath();
+        ctx.moveTo(prevX, prevY);
+        ctx.lineTo(currX, currY);
+        ctx.strokeStyle = x;
+        ctx.lineWidth = y;
+        ctx.stroke();
+        ctx.closePath();
+    }
+
+    function erase() {
+        ctx.clearRect(0, 0, w, h);
+    }
+
+    function save() {
+        var dataURL = canvas.toDataURL();
+        document.getElementById("canvasimg").src = dataURL;
+    }
+
+    function findxy(res, e) {
+        if (res == 'down') {
+            prevX = currX;
+            prevY = currY;
+            currX = e.clientX - canvas.offsetLeft;
+            currY = e.clientY - canvas.offsetTop;
+
+            flag = true;
+            dot_flag = true;
+            if (dot_flag) {
+                ctx.beginPath();
+                ctx.fillStyle = x;
+                ctx.fillRect(currX, currY, 2, 2);
+                ctx.closePath();
+                dot_flag = false;
+            }
+        }
+        if (res == 'up' || res == "out") {
+            flag = false;
+        }
+        if (res == 'move') {
+            if (flag) {
+                prevX = currX;
+                prevY = currY;
+                currX = e.clientX - canvas.offsetLeft;
+                currY = e.clientY - canvas.offsetTop;
+                draw();
+            }
+        }
+    }
+
+    function SetPenSize() {
+        y = +document.getElementById("penSize").value;
+    }
+</script>
+
+<body onload="init()">
+    <form id="myForm">
+        <div class="container">
+            <div class="row">
+            <div class="col-md-12">
+                <table class="table">
+                    <tr>
+                        <td>
+                            Select Pen Size
+                        </td>
+                        <td>
+                            <select name="penSize" id="penSize" onchange="SetPenSize()">
+                                <option value="2">Two</option>
+                                <option value="4">Four</option>
+                                <option value="6">Six</option>
+                                <option value="8">Eight</option>
+                                <option value="10">Ten</option>
+                            </select>
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                Draw a number using mouse:
+            </div>
+            <div class="col-md-1"></div>
+            <div class="col-md-4">
+                <button type="button" class="btn btn-default" id="btn" onclick="save()">Save input as image</button>
+                <button type="button" id="clr" class="btn btn-default" onclick="erase()">Reset</button>
+            </div>
+            <div class="col-md-6">
+
+            </div>
+        </div>
+        <br><br>
+        <div class="row">
+            <div class="col-md-2">Number Image draw by user</div>
+            <div class="col-md-2">
+                <img id="canvasimg" src="" style="background: black; border: 1ps solid gray;">
+            </div>
+            <div class="col-md-2">
+                <button id="btnPredict" type="button" class="btn btn-default">Predict Image</button>
+            </div>
+            <div class="col-md-2">
+                <div id="divPrediction">Prediction result:</div>
+            </div>
+
+        </div>
+        </div>
+        <canvas id="can" width="64" height="64"
+            style="position:absolute;top:35%;left:25%;border:1px solid gray;background: black"></canvas>
+    </form>
+</body>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#btnPredict").click(function () {
+            var image = document.getElementById('canvasimg').src;
+            var formData = new FormData();
+            formData.append("file", image);
+
+            var appURL = window.location.origin + '/identify_digit'
+            $.ajax({
+                url: appURL,
+                type: 'POST',
+                data: formData,
+                processData: false,  // tell jQuery not to process the data
+                contentType: false,  // tell jQuery not to set contentType
+                cache: false,
+                async: false,
+                success: function (d) {
+                    $("#divPrediction").text("Prediction result: " + d);
+                },
+                error: function () {
+                    alert("Faild please try upload again");
+                }
+            });
+        });
+    });
+
+</script>
+
+</html>

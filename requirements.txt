@@ -1,0 +1,16 @@
+Flask
+gunicorn
+pandas
+numpy
+Keras==2.2.4
+werkzeug
+opencv-python
+python-csv
+Pillow-PIL
+pickle5
+mtcnn
+sklearn
+uuid0
+os-win
+pybase64
+re101

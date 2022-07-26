@@ -1,0 +1,187 @@
+<html lang="en">
+
+<head>
+	<title>Sample Application</title>
+	<link rel="shortcut icon" type="image/png" href="../static/favicon.ico" />
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+		integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+	<script src="../static/custom.js"></script>
+</head>
+
+<body>
+	<form>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<a href="#train" data-toggle="collapse">
+								<h4 class="panel-title">
+									Model training - help your model in learning
+									by giving inputs
+								</h4>
+							</a>
+						</div>
+
+						<div class="panel-body collapse" id="train">
+							<table class="table table-bordered">
+								<tr>
+									<td class="col-md-2">Image for training:</td>
+									<td class="col-md-4"><input id="imgTraining" class="form-control" type="file"
+											id="imageFile" /></td>
+									<td class="col-md-6" rowspan="3" style="width:50px; "><img id="imgTrainingView"
+											style="max-height: 300px;max-width: 300px;">
+									</td>
+								</tr>
+								<tr>
+									<td>Person name in image</td>
+									<td>
+										<input type="text" value="" id="txtName"
+											placeholder="Enter the person name in selected image" class="form-control">
+										<button type="button" class="btn btn-sm btn-primary" id="btnTraining">Start
+											Training</button>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<div id="divTrainResult"></div>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<a href="#prediction" data-toggle="collapse">
+								<h4 class="panel-title">Image prediction</h4>
+							</a>
+						</div>
+
+						<div class="panel-body collapse in" id="prediction">
+							<table class="table table-bordered">
+								<tr>
+									<td class="col-md-1">Image to recognize:</td>
+									<td class="col-md-5"><input id="imgRecognize" class="form-control" type="file"
+											id="imageFile" /></td>
+									<td class="col-md-6">
+										<button type="button" class="btn btn-sm btn-primary" id="btnPredict">Recognize
+											Person</button>
+									</td>
+								</tr>
+								<tr>
+									<td class="col-md-6" colspan="3">
+										<img id="imgRecognizeView" style="max-height: 300px;max-width: 300px;">
+									</td>
+								</tr>
+								<tr>
+									<td colspan="3">
+										<div id="divPrediction">Prediction result:</div>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</body>
+
+</html>
+<script type="text/javascript">
+	$(document).ready(function () {
+		$(document).ajaxStart(function () {
+			$("#divLoading").css("display", "block");
+		});
+		$(document).ajaxComplete(function () {
+			$("#divLoading").css("display", "none");
+		});
+
+		$('#imgTraining').change(function () {
+			readURL(this, '#imgTrainingView');
+		});
+		$('#imgRecognize').change(function () {
+			readURL(this, '#imgRecognizeView');
+		});
+
+		function readURL(input, ctrl) {
+			if (input.files && input.files[0]) {
+				var reader = new FileReader();
+				reader.onload = function (e) {
+					$(ctrl).attr('src', e.target.result);
+				}
+				reader.readAsDataURL(input.files[0]);
+			}
+		}
+
+		$("#btnTraining").click(function () {
+			var pName = $('#txtName').val();
+			if (pName.length == 0) {
+				alert("Enter the name of person in image.");
+				return;
+			}
+			var formData = new FormData();
+			var file = $('#imgTraining')[0];
+			formData.append('file', file.files[0]);
+			var appURL = window.location.origin + '/upload_new_faces/' + pName;
+			//var appURL = window.location.origin + '/upload_new_faces'
+			$.ajax({
+				url: appURL,
+				type: 'POST',
+				data: formData,
+				processData: false,  // tell jQuery not to process the data
+				contentType: false,  // tell jQuery not to set contentType
+				cache: false,
+				success: function (d, s) {
+					var divTrainResult = d;
+					$("#divTrainResult").html(divTrainResult);
+				},
+				error: function () {
+					divTrainResult = "Failed please try upload again";
+					$("#divTrainResult").html(divTrainResult);
+				}
+			});
+		});
+
+		$("#btnPredict").click(function () {
+			var formData = new FormData();
+			var file = $('#imgRecognize')[0];
+			formData.append('file', file.files[0]);
+			var appURL = window.location.origin + '/recognize_single_faces'
+			$.ajax({
+				url: appURL,
+				type: 'POST',
+				data: formData,
+				processData: false,  // tell jQuery not to process the data
+				contentType: false,  // tell jQuery not to set contentType
+				cache: false,
+				success: function (d, s) {
+					var html = '<table class="table table-bordered"><thead><tr><th>Person Name</th><th>Face Image</th></tr></thead><tbody>';
+					if (d != null) {
+						for (let index = 0; index < d.length - 1; index++) {
+							html += '<tr><td>' + d[index].Name + '</td>';
+							html += '<td><img src="../static/faces/' + d[index].Image + '"></td></tr>';
+						}
+						html += '</tbody></table>'
+						$('#imgRecognizeView').attr('src', '../static/faces/' + d[d.length - 1].Image);
+					}
+					$("#divPrediction").html("Prediction result: " + html);
+				},
+				error: function () {
+					alert("Failed please try upload again");
+				}
+			});
+		});
+	});
+
+
+
+</script>

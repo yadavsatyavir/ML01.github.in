@@ -1,0 +1,121 @@
+<html lang="en">
+
+<head>
+    <title>Deep learning</title>
+    <link rel="shortcut icon" type="image/png" href="../static/favicon.ico" />
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../static/style.css">
+
+</head>
+
+<body>
+    <div class="jumbotron text-center" style="color: white; background-image: url('../static/header.jpg'); background-color: blanchedalmond;padding: 1px;">
+        <h1>Welcome to the Machine Learning</h1>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="just-padding">
+                <div class="list-group list-group-root well">
+                    <a href="#item-1" class="list-group-item" data-toggle="collapse">
+                        <i class="glyphicon glyphicon-chevron-right"></i>Supervised Learning – Train Me!
+                    </a>
+                    <div class="list-group" id="item-1">
+                        <a href="#item-1-1" class="list-group-item" data-toggle="collapse">
+                            <i class="glyphicon glyphicon-chevron-right"></i>Image Based Learning Models
+                        </a>
+                        <div class="list-group" id="item-1-1">
+                            <a class="list-group-item" href='/image_prediction' title="Click Me">Image Classifier for Dog and Cat Only</a>
+                            <a class="list-group-item" href='/digit_recognizer' title="Click Me">Digit Recognizer</a>
+                            <a class="list-group-item" href='/cloth_recognizer' title="Click Me">Cloth Recognizer</a>
+                            <a class="list-group-item" href='/face_extractor' title="Click Me">Face Extractor</a>
+                            <a class="list-group-item" href='/face_recognizer' title="Click Me">Face Recognizer</a>
+                        </div>
+
+                        <a href="#item-1-2" class="list-group-item" data-toggle="collapse">
+                            <i class="glyphicon glyphicon-chevron-right"></i>Natural Language Processing
+                        </a>
+                        <div class="list-group collapse" id="item-1-2">
+                            <a class="list-group-item" href='/nlp_sentiment_movie_review' title="Click Me">NLP Sentiment - Movie Review</a>
+                            <a class="list-group-item" href='/nlp_news_classification_01' title="Click Me">NLP News Classification</a>
+                            <a class="list-group-item" href='/nlp_next_word_prediction_01' title="Click Me">NLP Next Word Prediction</a>
+                            <a class="list-group-item" href='/nlp_english_to_french' title="Click Me">NLP Translate English to French</a>
+                        </div>
+                    </div>
+
+                    <a href="#item-2" class="list-group-item" data-toggle="collapse">
+                        <i class="glyphicon glyphicon-chevron-right"></i>Unsupervised Learning – I am self sufficient in learning
+                    </a>
+                    <div class="list-group collapse" id="item-2">
+                        <a href="#item-2-1" class="list-group-item" data-toggle="collapse">
+                            <i class="glyphicon glyphicon-chevron-right"></i>Item 2.1
+                        </a>
+                        <div class="list-group collapse" id="item-2-1">
+                            <a href="#" class="list-group-item">Item 2.1.1</a>
+                            <a href="#" class="list-group-item">Item 2.1.2</a>
+                        </div>
+
+                        <a href="#item-2-2" class="list-group-item" data-toggle="collapse">
+                            <i class="glyphicon glyphicon-chevron-right"></i>Item 2.2
+                        </a>
+                        <div class="list-group collapse" id="item-2-2">
+                            <a href="#" class="list-group-item">Item 2.2.1</a>
+                            <a href="#" class="list-group-item">Item 2.2.2</a>
+                        </div>
+                    </div>
+                    <a href="#item-3" class="list-group-item" data-toggle="collapse">
+                        <i class="glyphicon glyphicon-chevron-right"></i>Reinforcement Learning – My life My rules! (Hit & Trial)
+                    </a>
+                    <div class="list-group collapse" id="item-3">
+
+                        <a href="#item-3-1" class="list-group-item" data-toggle="collapse">
+                            <i class="glyphicon glyphicon-chevron-right"></i>Item 3.1
+                        </a>
+                        <div class="list-group collapse" id="item-3-1">
+                            <a href="#" class="list-group-item">Item 3.1.1</a>
+                            <a href="#" class="list-group-item">Item 3.1.2</a>
+                        </div>
+
+                        <a href="#item-3-2" class="list-group-item" data-toggle="collapse">
+                            <i class="glyphicon glyphicon-chevron-right"></i>Item 3.2
+                        </a>
+                        <div class="list-group collapse" id="item-3-2">
+                            <a href="#" class="list-group-item">Item 3.2.1</a>
+                            <a href="#" class="list-group-item">Item 3.2.2</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row" style="display: none;">
+            <div class="col-md-12">
+            </div>
+            <ul>
+                <li><a class="btn btn-lg" href='/image_prediction' title="Click Me">Image Classifier for Dog and Cat Only</a></li>
+                <li><a class="btn btn-lg" href='/digit_recognizer' title="Click Me">Digit Recognizer</a></li>
+                <li><a class="btn btn-lg" href='/cloth_recognizer' title="Click Me">Cloth Recognizer</a></li>
+                <li><a class="btn btn-lg" href='/face_extractor' title="Click Me">Face Extractor</a></li>
+                <li><a class="btn btn-lg" href='/face_recognizer' title="Click Me">Face Recognizer</a></li>
+                <li><a class="btn btn-lg" href='/nlp_sentiment_movie_review' title="Click Me">NLP Sentiment - Movie Review</a></li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        $(function() {
+
+            $('.list-group-item').on('click', function() {
+                $('.glyphicon', this)
+                    .toggleClass('glyphicon-chevron-right')
+                    .toggleClass('glyphicon-chevron-down');
+            });
+
+        });
+    </script>
+
+</body>
+
+
+</html>

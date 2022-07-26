@@ -1,0 +1,7 @@
+Number of samples: 50000
+Number of unique input tokens: 77
+Number of unique output tokens: 104
+Max sequence length for inputs: 23
+Max sequence length for outputs: 74
+Train on 40000 samples, validate on 10000 samples
+Epoch 1/100

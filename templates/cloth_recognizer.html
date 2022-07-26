@@ -1,0 +1,85 @@
+<html lang="en">
+
+<head>
+	<title>Sample Application</title>
+	<link rel="shortcut icon" type="image/png" href="../static/favicon.ico"/>
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+		integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+	<script src="../static/custom.js"></script>
+</head>
+
+<body>
+	<form>
+		  <div class="container">
+			<div class="row">
+				<div class="col-md-2">
+					Select cloth image to predict
+				</div>
+				<div class="col-md-6">
+					<input class="form-control" type="file" id="imageFile" />
+				</div>
+				<div class="col-md-2">
+					<button id="btnPredict" type="button" class="btn btn-default">Predict Image</button>
+							</div>
+				<div class="col-md-2">
+					<div id="divPrediction">Prediction result:</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<img id="imgSelected" src="" style="max-width:400px;max-height:400px;" alt="">
+				</div>
+
+			</div>
+		</div>
+	</form>
+</body>
+
+</html>
+<script type="text/javascript">
+	$(document).ready(function () {
+		$('input[type="file"]').change(function () {
+			readURL(this);
+		});
+	
+		$("#btnPredict").click(function () {
+			var formData = new FormData();
+			var file = $('#imageFile')[0];
+			formData.append('file', file.files[0]);
+			var appURL = window.location.origin + '/predict_cloth' 
+			$.ajax({
+				url: appURL,
+				type: 'POST',
+				data: formData,
+				processData: false,  // tell jQuery not to process the data
+				contentType: false,  // tell jQuery not to set contentType
+				cache: false,
+				async: false,
+				success: function (d) {
+					$("#divPrediction").text("Prediction result: " + d);
+				},
+				error: function () {
+					alert("Faild please try upload again");
+				}
+			});
+		});
+
+		function readURL(input) {
+			$("#divPrediction").text("Prediction result: ");
+			if (input.files && input.files[0]) {
+				var reader = new FileReader();
+				reader.onload = function (e) {
+					$('#imgSelected').attr('src', e.target.result);
+				}
+				reader.readAsDataURL(input.files[0]);
+			}
+		}
+
+	});
+
+
+
+</script>
